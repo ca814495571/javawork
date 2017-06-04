@@ -1,0 +1,1 @@
+WeakHashMap key为null时,gc后,key没被引用则被自动remove
