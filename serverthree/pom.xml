@@ -17,6 +17,23 @@
             <artifactId>my-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.5.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>io.dubbo.springboot</groupId>-->
+            <!--<artifactId>spring-boot-starter-dubbo</artifactId>-->
+            <!--<version>1.0.0</version>-->
+        <!--</dependency>-->
     </dependencies>
 
 
