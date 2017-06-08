@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"  
+	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+
+
+	<bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <!-- 核心线程数，默认为1 -->
+        <property name="corePoolSize" value="10" />
+        <!-- 最大线程数，默认为Integer.MAX_VALUE -->
+        <property name="maxPoolSize" value="20" />
+        <!-- 队列最大长度，一般需要设置值>=notifyScheduledMainExecutor.maxNum；默认为Integer.MAX_VALUE -->
+        <property name="queueCapacity" value="1000" />
+        <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+        <property name="keepAliveSeconds" value="300" />
+        <!-- 线程池对拒绝任务（无线程可用）的处理策略，目前只支持AbortPolicy、CallerRunsPolicy；默认为后者 -->
+        <property name="rejectedExecutionHandler">
+            <!-- AbortPolicy:直接抛出java.util.concurrent.RejectedExecutionException异常 -->
+            <!-- CallerRunsPolicy:主线程直接执行该任务，执行完之后尝试添加下一个任务到线程池中，可以有效降低向线程池内添加任务的速度 -->
+            <!-- DiscardOldestPolicy:抛弃旧的任务、暂不支持；会导致被丢弃的任务无法再次被执行 -->
+            <!-- DiscardPolicy:抛弃当前任务、暂不支持；会导致被丢弃的任务无法再次被执行 -->
+            <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+        </property>
+    </bean>
+
+
+<!-- 	<bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">   配置一个自定义编辑器   -->
+<!-- 	        <property name="customEditors">需要编辑的属性类型，是一个map   -->
+<!-- 	            <map>   -->
+<!-- 	                <entry key="java.util.Date">   -->
+<!-- 	                    <bean class="com.cqfc.statistics.common.CustomerProperty">   -->
+<!-- 	                        <property name="format" value="yyyy-mm-dd" />  注入需要转换的格式   -->
+<!-- 	                    </bean>   -->
+<!-- 	                </entry>   -->
+<!-- 	            </map>   -->
+<!-- 	        </property>   -->
+<!-- 	 </bean> -->
+
+
+	<bean id="dataSynConfig" class="com.cqfc.statistics.common.DataSyncConfig">
+
+		<property name="dataSyncBeans">
+			<list>
+   				<ref bean="userBuy" />   
+  				<ref bean="userRecharge" />   
+ 				<ref bean="userAppend" />   
+ 				<ref bean="userPay" />  
+ 				<ref bean="userWithdraw" />  
+ 				<ref bean="activityCheckIn" />  
+				<ref bean="userInfo" /> 
+				<ref bean="userFinance" /> 
+				<ref bean="userAccount" /> 
+				<ref bean="userBindStat" /> 
+				<ref bean="activityPersGive" />
+				<ref bean="activityPersRec" />
+				<ref bean="activityAppend" />
+			</list>
+		</property>
+		<property name ="threadPool" ref="threadPoolTaskExecutor">
+		</property>
+	</bean>
+
+	<!--   购彩数据同步配置 cqfcdb.t_lottery_deal_recent -->
+	<bean id="userBuy" class="com.cqfc.statistics.common.DataSyncBean">
+		<!-- 由于时间start和end是可变化的,暂时由java程序控制,规则：start表示给定日期的凌晨,end表示给定日期次日凌晨（2015-01-14 00:00:00，2015-01-15 00:00:00）-->
+		<!-- selectSql字段别名一定要与insertSql中的字段名相同,否则insert的字段为null -->
+		<property name="selectSql"
+			value=" select  t.Fuser_id as user_id, t.Fdeal_id as action_id,t.Fplan_id as plan_id,t.Fbuy_time as action_time, 
+				t.Fnick as  nick, t.Flottery_name as lottery,t.Fissue_no as issue_no,t.Factual_amount as actual_money,
+				t.Fpresent_amount as present_money,t.Ftotal_amount as total_money,t.Fplan_type as planType,
+				t.Fbet_station as bet_station,t.Fdistributor as distributor,t.Fprize_after_tax as win_money,t.Fplan_user_id as plan_user_id,t.Fbuy_count as action_times,t.Fissue_id as issue_id,t.forder_code as action_no from cqfcdb.t_lottery_deal_recent t where t.Fdeal_status in (3,4,5,24) and t.Flast_update_time&gt;=@{start} and t.Flast_update_time&lt;@{end}" />
+		
+			<!-- SELECT 参数配置-->
+		<property name="selectSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+                </entry>
+            </map>
+		</property>
+		
+		<property name="insertSql"
+			value="insert into t_user_action (user_id,nick,lottery,issue_no,plan_id,planType,action_id,
+				action_time,total_money,actual_money,present_money,
+				action_type,bet_station,
+				distributor,bet_business_type,station_name,bet_address,win_money,plan_user_id,action_times,issue_id,action_no) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<!-- Insert 参数配置-->
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcdb" />
+	</bean>
+
+
+	<!-- 用户充值数据同步 cqfcfinance.t_lottery_charge_recent -->
+	<bean id="userRecharge" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fcharge_id as activity_no,Fuser_id as user_id,Fuser_nick as nick,
+		Fcharge_amount as total_money,Fcharge_type as action_payType,Fcharge_account as activity_content_one,
+		Fsp_id as plan_user_id,Fpay_time as activity_startTime,Fcallback_time as activity_endTime,Ftransaction_no as char_1,Fclient_ip as char_2, Fis_credit_card as planType,Fcharge_state as action_status,
+		Fchannel as bet_station,Fsource as action_terminal,Fcreate_time as action_time from t_lottery_charge_recent where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/>
+	
+		<property name="insertSql"
+		value="replace into t_user_action (activity_no,user_id,nick,total_money,action_payType,activity_content_one,
+		plan_user_id,activity_startTime,activity_endTime,char_1,char_2,planType,action_status,bet_station, action_terminal,action_time,action_type) 
+		values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<!-- Insert 参数配置-->
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_TWO"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+		<!-- 用户支付数据同步 cqfcfinance.t_lottery_payinfo_recent -->
+	<bean id="userPay" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fpay_id as activity_no,Fuser_id as user_id,Fuser_nick as nick,Fsp_id as plan_user_id,
+		Fcapital_amount as actual_money,Fpresent_amount as present_money,Fclient_ip as char_1,Fstatus as action_status,
+		Fchannel as bet_station,Fsource as action_terminal,Fpay_type as action_payType,Fis_credit_card as int_1,Fplan_id as plan_id,
+		Forder_no as action_no ,Forder_status as int_2,Fbuyer_account as char_2,Ftransaction_no as char_3,Fbuyer_real_account
+		 as action_account,Fpay_time as activity_startTime ,Fcallback_time as activity_endTime,Fcreate_time as action_time   
+		  from t_lottery_payinfo_recent where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/>
+	
+		<property name="insertSql"
+		value="replace into t_user_action (activity_no,user_id,nick,plan_user_id,actual_money,present_money,char_1,action_status,
+		bet_station,action_terminal,action_paytype,int_1,plan_id,action_no,int_2,char_2,char_3,action_account,
+		activity_starttime,activity_endtime,action_time,action_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<!-- Insert 参数配置-->
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_FIVE"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+	
+	
+		<!-- 用户提现数据同步 cqfcfinance.t_lottery_withdraw -->
+	<bean id="userWithdraw" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fwithdraw_id as activity_no,Fuser_id as user_id,Fuser_nick as nick,Fadmin_id as plan_user_id,
+		Fwithdraw_amount as total_money,Frest_amount as present_money,Fwithdraw_status as action_status,
+		Fname as char_1 ,Fmobile as char_2,Fpay_account as char_3,Faccount_type as action_payType,
+		Fbank_id as action_terminal,Fcreate_time as action_time,Fcheck_time as activity_startTime  from t_lottery_withdraw where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/>
+	
+		<property name="insertSql"
+		value="replace into t_user_action (activity_no,user_id,nick,plan_user_id,total_money,present_money,action_status,char_1,char_2,char_3,action_payType,action_terminal,action_time,activity_startTime,action_type) 
+		values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<!-- Insert 参数配置-->
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_THREE"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+
+<!-- 追号任务数据同步 cqfcdb.t_lottery_append_task replace 全表(有没有同步数据的必要) -->
+	<bean id="userAppend" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fuser_id as user_id,Fappend_task_id as action_id,
+ 		Flottery_id as lottery,Fbet_content as activity_content_two,Fissue_id as issue_id,
+ 		Fissue_no as issue_no,Fappend_num as action_times,Fremain_num as next_id, 
+ 		Fappend_type as planType,Fend_condition as plan_id,Fappend_task_stat as action_status,
+ 		Fappend_task_amount as total_money,Ftotal_prize as win_money,Fmultiple as activity_times, 
+ 		Fcreate_time as action_time from t_lottery_append_task where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/> 
+	
+		<property name="insertSql"
+		value="replace into t_user_action (user_id,action_id,lottery,activity_content_two,issue_id,
+ 		issue_no,action_times,next_id,planType,plan_id,action_status,total_money,win_money,activity_times,action_time,action_type)  
+ 		values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" /> 
+		
+	
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_FOURE"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcdb" />
+	</bean>
+	
+	
+	<!-- 用户绑定投注站 cqfcfinance.t_lottery_station_bind_record_all  -->
+	<bean id="userBindStat" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fuser_id as user_id,Fid as action_id,Fstation_code as bet_station,Fstation_name as station_name,Fstation_type as int_1,Fbusiness_type as bet_business_type,Fsource as int_2 , Fbind_result as int_3, 
+ 		  Fcreate_time as action_time from t_lottery_station_bind_record_all where Fcreate_time&gt;=@{start} and Fcreate_time&lt;@{end}"/> 
+	
+		<property name="insertSql"
+		value="replace into t_user_action (user_id,action_id,bet_station,station_name,int_1,bet_business_type,int_2,int_3,action_time,action_type)  
+ 		values(?,?,?,?,?,?,?,?,?,?)" /> 
+		
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_NINE"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+	
+
+	<!-- 用户基本信息数据 cqfcfinance.t_lottery_userinfo_all 全表(有没有同步数据的必要) -->
+	<bean id="userInfo" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fuser_id as unique_id,Facc_id as acc_id,Fnick as nick,Fcard_type as card_type,Fcard_no as card_no,Fmobile as mobile,Femail as email,Fbet_station as bet_station,
+		Fdistributor as distributor,Fname as name,Fsex as sex,Fbirthday as birthday,Fage as age,Fuser_type as user_type,Fmodify_nick_count as modify_nick_count,Fchannel as channel,Fverify_time as verify_time,
+		Ffrom_where as from_where,Faccount_type as account_type,Fcft_account as cft_account,Fother_account as other_account,Fclient_ip as client_ip,Fregist_time as action_time  
+		from t_lottery_userinfo_all where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/> 
+	
+		<property name="insertSql"
+		value=" replace into t_user_info (unique_id,acc_id,nick,card_type,card_no,mobile,email,bet_station,distributor,name,sex,birthday,age,user_type,modify_nick_count,channel,verify_time,from_where,account_type,cft_account,other_account,client_ip,action_time,action_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+				" /> 
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_SIX"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+	
+	<!-- 用户账户金额数据 cqfcfinance.t_lottery_finance_all 全表(有没有同步数据的必要) -->
+	<bean id="userFinance" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Ff_id as unique_id,Fuser_id as user_id,Fuser_nick as nick,Fcapital as actual_amount,Fpresent as present_amount,Ffreeze_amount as freeze_amount , Fintegral as integral,Fverify_code as verify_code,Fcreate_time as action_time 
+		from t_lottery_finance_all where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/> 
+	
+		<property name="insertSql"
+		value=" replace into t_user_info (unique_id,user_id,nick,actual_amount,present_amount,freeze_amount,integral,verify_code,action_time,action_type) values (?,?,?,?,?,?,?,?,?,?)
+				" /> 
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_SEVEN"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+		
+	<!-- 用户账号 cqfcfinance.t_lottery_pay_account_all 全表(有没有同步数据的必要) -->
+	<bean id="userAccount" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fpay_acc_id as unique_id,Fuser_id as user_id,Fbank_id as bank_id,Facc_type as account_type,Fpay_account as cft_account,Facc_status as acc_status,Fcreate_time as action_time 
+		from t_lottery_pay_account_all where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/> 
+	
+		<property name="insertSql"
+		value=" replace t_user_info (unique_id,user_id,bank_id,account_type,cft_account,acc_status,action_time,action_type) values (?,?,?,?,?,?,?,?)" /> 
+		<property name="insertSqlParam">
+			<map>
+                <entry key="action_type">
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_EIGHT"/>
+                </entry>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+
+	
+	
+	
+
+<!-- 	20150115  CHECKIN_QQTOY 数据同步 t_lottery_user_checkin  replace全表(有没有同步数据的必要?) -->
+	<bean id="activityCheckIn" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Fuser_id as user_id,Fcheckin_id as action_id,Fnick as nick,Fmonth as time,Ftimes as activity_times,Fdaily_checkin as activity_content_one,Fdaily_reward as activity_content_two,Fcreate_time as action_time from t_lottery_user_checkin where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/>
+	
+			<property name="insertSql"
+			value="replace into t_user_action (user_id,action_id,nick,time,activity_times,activity_content_one,activity_content_two,action_type,activity_type,activity_no,action_time) values(?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_TEN"/>
+                </entry>
+                <entry key="activity_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+                </entry>
+                	
+                <entry key="activity_no" value="CHECKIN_QQTOY" value-type="java.lang.String"/>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcdb" />
+	</bean>
+	
+	
+	
+	<!-- 	PERSONAL_GIVE 数据同步 cqfcfinance.t_lottery_activity_give_info   -->
+	<bean id="activityPersGive" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select give_id as action_id,give_no as action_no,user_id as user_id,user_nick as nick,limit_count as int_1,use_count as int_2,surplus_count as int_3,limit_amount as total_money,use_amount as actual_money,effactive_begin_time as activity_startTime,effactive_end_time as activity_endTime,create_time as action_time,active_status as action_status,message as activity_content_two from t_lottery_activity_give_info where last_update_time&gt;=@{start} and last_update_time&lt;@{end}"/>
+	
+			<property name="insertSql"
+			value="replace into t_user_action (action_id,action_no,user_id,nick,int_1,int_2,int_3,total_money,actual_money,activity_starttime,activity_endtime,action_time,action_status,activity_content_two,activity_type,action_type,activity_no) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_TEN"/>
+                </entry>
+                <entry key="activity_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_TWO"/>
+                </entry>
+                 <entry key="activity_no" value="PERSONAL_GIVE" value-type="java.lang.String"/>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+	
+	
+	<!-- 	PERSONAL_GIVE RECIEVE 数据同步 t_lottery_activity_give_record  -->
+	<bean id="activityPersRec" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select record_id as action_id,give_id as next_id,give_no as action_no,user_id as user_id,user_nick as nick,create_time as action_time,record_status as action_status,content as activity_content_one ,plan_id as plan_id ,deal_id as int_1,message as activity_content_two from t_lottery_activity_give_record where last_update_time&gt;=@{start} and last_update_time&lt;@{end}"/>
+	
+			<property name="insertSql"
+			value=" replace into t_user_action (action_id,next_id,action_no,user_id,nick,action_time,action_status,activity_content_one,plan_id,int_1,activity_content_two,activity_type,action_type,activity_no) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_TEN"/>
+                </entry>
+                <entry key="activity_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_THREE"/>
+                </entry>
+                	
+                <entry key="activity_no" value="PERSONAL_GIVE" value-type="java.lang.String"/>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcfinance" />
+	</bean>
+
+		<!-- 	APPEND_TASK_50  数据同步 cqfcdb.t_lottery_activity_append  -->
+	<bean id="activityAppend" class="com.cqfc.statistics.common.DataSyncBean">
+	
+		<property name="selectSql" value="select Factivity_append_id as action_id,Fappend_task_id as plan_id ,Factivity_no as activity_no,Fuser_id as user_id,Fnick as nick,Flottery_id as lottery,Fexpect_end_time as activity_endTime,Fcreate_time as action_time,Fstate as action_status,Freason_type as int_1,Freason_detail as activity_content_two  from t_lottery_activity_append where Flast_update_time&gt;=@{start} and Flast_update_time&lt;@{end}"/>
+	
+			<property name="insertSql"
+			value=" replace into t_user_action (action_id,plan_id,activity_no,user_id,nick,lottery,activity_endtime,action_time,action_status,int_1,activity_content_two,activity_type,action_type) values (?,?,?,?,?,?,?,?,?,?,?,?,?)" />
+		
+		<property name="insertSqlParam">
+				 <map>
+                <entry key="action_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_TEN"/>
+                </entry>
+                <entry key="activity_type" >
+                	<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_FOURE"/>
+                </entry>
+           <entry key="activity_no" value="APPEND_TASK_50" value-type="java.lang.String"/>
+            </map>
+		</property>
+		<property name="exceptionHandler" >
+			<util:constant static-field="com.cqfc.statistics.common.IConstantUtil.CONST_ONE"/>
+		</property>
+		<property name="sourceUrl" value="182.254.145.214:18009" />
+		<property name="sourceDataBase" value="cqfcdb" />
+	</bean>
+
+</beans>

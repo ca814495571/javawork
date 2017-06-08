@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+	 id        		设备的id
+     type      		设备的类型（暂时没有用到，方便以后扩展）
+     typeName       设备的类型名称（现在使用）
+     serviceIndex   set 序号
+     ip       		设备的ip或solr的url
+     port      		设备的端口号
+     queueSize 		设备当前处理的队列大小
+     threshholdSize 设备最多处理的队列大小
+     desc      		设备描述说明
+-->
+<devices>
+	<device>
+		<id>001</id>
+		<type>1</type>
+		<typeName>appendTask</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10013</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>append-task</desc>
+	</device>
+	<device>
+		<id>010</id>
+		<type>2</type>
+		<typeName>userAccount</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10009</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>user-account</desc>
+	</device>
+	<device>
+		<id>020</id>
+		<type>3</type>
+		<typeName>lotteryIssue</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10006</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>lottery-issue</desc>
+	</device>
+	<device>
+		<id>030</id>
+		<type>4</type>
+		<typeName>partnerAccount</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10008</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>partner-account</desc>
+	</device>
+	<device>
+		<id>040</id>
+		<type>5</type>
+		<typeName>partner</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10005</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>partner</desc>
+	</device>
+	<device>
+		<id>050</id>
+		<type>7</type>
+		<typeName>ticketIssue</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10066</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>ticket-issue</desc>
+	</device>
+	<device>
+		<id>060</id>
+		<type>8</type>
+		<typeName>partnerOrder</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10088</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>partner-order</desc>
+	</device>
+	<device>
+		<id>070</id>
+		<type>9</type>
+		<typeName>userOrder</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10089</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>user-order</desc>
+	</device>
+
+	<!-- business_controller 104 -->
+	<device>
+		<id>080</id>
+		<type>10</type>
+		<typeName>businessController</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10010</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>business-controller</desc>
+	</device>
+	<device>
+		<id>150</id>
+		<type>10</type>
+		<typeName>businessController</typeName>
+		<serviceIndex>1</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10010</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>business-controller</desc>
+	</device>
+	
+	<!-- business_controller other interface -->
+	<device>
+		<id>170</id>
+		<type>11</type>
+		<typeName>businessController</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10011</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>business-controller</desc>
+	</device>
+	
+	<!-- business_controller 105 -->
+	<device>
+		<id>180</id>
+		<type>17</type>
+		<typeName>businessController</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10010</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>business-controller</desc>
+	</device>
+
+	<device>
+		<id>210</id>
+		<type>12</type>
+		<typeName>accessBack</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10090</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>access-back</desc>
+	</device>
+	<device>
+		<id>220</id>
+		<type>13</type>
+		<typeName>ticketWinning</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10091</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>ticket-winning</desc>
+	</device>
+	<device>
+		<id>230</id>
+		<type>14</type>
+		<typeName>cancelOrder</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10017</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>cancel-order</desc>
+	</device>
+	<device>
+		<id>240</id>
+		<type>15</type>
+		<typeName>riskControl</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>10087</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>risk-control</desc>
+	</device>
+	<device>
+		<id>27</id>
+		<type>16</type>
+		<typeName>solr</typeName>
+		<serviceIndex>0</serviceIndex>
+		<ip>127.0.0.1</ip>
+		<port>8080</port>
+		<queueSize>0</queueSize>
+		<thresholdSize>1000</thresholdSize>
+		<desc>solr 服务器</desc>
+	</device>
+</devices>

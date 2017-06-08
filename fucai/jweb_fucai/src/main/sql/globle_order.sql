@@ -1,0 +1,124 @@
+CREATE TABLE t_lottery_issue_sale_count (
+	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+	issueNo VARCHAR(50) NOT NULL DEFAULT '0' COMMENT '期号',
+	lotteryId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '彩种Id',
+	partnerId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '渠道id',
+	sucNum BIGINT(20) NOT NULL DEFAULT '0' COMMENT '成功交易的数量',
+	sucMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '成功交易的金额',
+	failNum BIGINT(20) NOT NULL DEFAULT '0' COMMENT '交易失败的笔数',
+	failMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '交易失败金额',
+	orderType TINYINT(4) NOT NULL DEFAULT '0' COMMENT '订单类型（1，直投 2，追号）',
+	createTime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+	lastUpdateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+	PRIMARY KEY (id),
+	UNIQUE INDEX issueNo_lotteryId_partnerId_orderType (issueNo, lotteryId, partnerId, orderType)
+)
+COMMENT='记录合作商订单类型(直投，追号)的期销售统计信息'
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=1;
+
+
+CREATE TABLE t_lottery_issue_reward_count (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	partnerId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '合作商Id',
+	lotteryId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '彩种',
+	issueNo VARCHAR(50) NOT NULL DEFAULT '' COMMENT '期号',
+	smallPrizeNum BIGINT(20) NOT NULL DEFAULT '0' COMMENT '小奖数量',
+	bigPrizeNum BIGINT(20) NOT NULL DEFAULT '0' COMMENT '大奖数量',
+	smallPrizeMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '中小奖金额',
+	bigPrizeMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '大奖金额',
+	orderType TINYINT(4) NOT NULL DEFAULT '0' COMMENT '1直投 2 追号',
+	createTime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+	lastUpdateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (id),
+	UNIQUE INDEX partnerId_lotteryId_issueNo_orderType (partnerId, lotteryId, issueNo, orderType)
+)
+COMMENT='兑奖金额数量统计表'
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=115;
+
+
+CREATE TABLE t_partner_daily_sale_count (
+	id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	partnerId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '渠道Id',
+	lotteryId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '彩种Id',
+	totalMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '销售总额',
+	awardPrizeMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '兑奖金额',
+	countTime DATE NOT NULL DEFAULT '0000-00-00' COMMENT '统计时间',
+	createTime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+	lastUpdateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+	PRIMARY KEY (id),
+	UNIQUE INDEX partnerId_lotteryId_createTime (partnerId, lotteryId, countTime)
+)
+COMMENT='合作商彩票每天的销售中奖统计表'
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=31555;
+
+CREATE TABLE t_partner_daily_encash_count (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	partnerId VARCHAR(50) NOT NULL DEFAULT '0' COMMENT '合作商Id',
+	encashTotalMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '提现总金额',
+	countTime DATE NOT NULL DEFAULT '0000-00-00' COMMENT '统计时间',
+	createTime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+	lastUpdateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+	PRIMARY KEY (id),
+	UNIQUE INDEX partnerId_countTime (partnerId, countTime)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=10;
+
+
+CREATE TABLE t_partner_daily_charge_count (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	partnerId VARCHAR(50) NOT NULL DEFAULT '0' COMMENT '合作商Id',
+	chargeTotalMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '充值总金额',
+	countTime DATE NOT NULL DEFAULT '0000-00-00' COMMENT '统计时间',
+	createTime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+	lastUpdateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+	PRIMARY KEY (id),
+	UNIQUE INDEX partnerId_countTime (partnerId, countTime)
+)
+COMMENT='合作商每天的充值统计表'
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=19;
+
+
+
+CREATE TABLE t_partner_order_00 (
+	orderId BIGINT(20) NOT NULL AUTO_INCREMENT COMMENT '订单ID',
+	lotteryId VARCHAR(32) NOT NULL DEFAULT '' COMMENT '彩种ID',
+	partnerId VARCHAR(64) NOT NULL DEFAULT '' COMMENT '渠道ID',
+	orderType TINYINT(4) NOT NULL DEFAULT '0' COMMENT '订单类型 ;1直投订单 2追号订单',
+	userId BIGINT(20) NOT NULL DEFAULT '0' COMMENT '用户ID',
+	issueNo VARCHAR(64) NOT NULL DEFAULT '' COMMENT '期号',
+	orderNo VARCHAR(64) NOT NULL DEFAULT '' COMMENT '订单编号',
+	tradeId VARCHAR(50) NOT NULL DEFAULT '' COMMENT '合作商唯一订单号',
+	winPrizeMoney BIGINT(20) NOT NULL DEFAULT '0' COMMENT '中奖金额',
+	orderStatus TINYINT(4) NOT NULL DEFAULT '0' COMMENT '订单状态：1待付款 2已付款 3出票中 4已出票待开奖 5出票失败 6未中奖 7待领奖 8已领奖 9退款中 10退款成功 11订单取消 12 算奖中 13 已派奖',
+	totalAmount BIGINT(20) NOT NULL DEFAULT '0' COMMENT '投注总金额',
+	prizeAfterTax BIGINT(20) NOT NULL DEFAULT '0' COMMENT '税后奖金',
+	orderContent VARCHAR(1024) NOT NULL DEFAULT '' COMMENT '投注内容',
+	stakeNum INT(11) NOT NULL DEFAULT '0' COMMENT '注数',
+	multiple INT(11) NOT NULL DEFAULT '0' COMMENT '倍数',
+	playType VARCHAR(32) NOT NULL DEFAULT '' COMMENT '玩法',
+	paySerialNumber VARCHAR(64) NOT NULL DEFAULT '' COMMENT '支付流水号',
+	realName VARCHAR(32) NOT NULL DEFAULT '' COMMENT '真实姓名',
+	cardNo VARCHAR(64) NOT NULL DEFAULT '' COMMENT '身份证号',
+	mobile VARCHAR(32) NOT NULL DEFAULT '' COMMENT '手机号',
+	createTime DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '创建时间',
+	lastUpdateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间',
+	ext VARCHAR(200) NOT NULL DEFAULT '' COMMENT '扩展信息',
+	PRIMARY KEY (orderId),
+	UNIQUE INDEX orderNo (orderNo)
+)
+COMMENT='订单表00'
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=2;
+
+

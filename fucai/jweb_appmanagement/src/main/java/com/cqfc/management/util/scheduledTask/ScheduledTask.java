@@ -1,0 +1,56 @@
+package com.cqfc.management.util.scheduledTask;
+
+
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.cqfc.management.service.IReadFTPFileService;
+
+/**
+ * @author: giantspider@126.com
+ */
+
+@EnableScheduling
+@Service
+public class ScheduledTask {
+
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    @Autowired
+    private IReadFTPFileService readFTPFileService;
+    
+    
+    public void reportCurrentTime(String scheduledType, String taskName) {
+        System.out.println("[" + scheduledType + "] " + taskName + " got executed at " + dateFormat.format(new Date()));
+    }
+
+    @Scheduled(fixedRate = 600000 )
+    public void task1() {
+    	
+    	readFTPFileService.ftpDateTransfer();
+    	
+    }
+
+
+//    @Scheduled(fixedDelay = 6000)
+//    public void task2() {
+//        reportCurrentTime("fixedDelay", "task2");
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @Scheduled(cron = "*/5 * * * * MON-FRI")
+//    public void task3() {
+//        reportCurrentTime("cron", "task3");
+//    }
+
+}

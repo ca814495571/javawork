@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="encashes"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="encashes" type="querytype"/>
+    <xs:complexType name="querytype">
+    	<xs:sequence>
+    		<xs:element ref="infolist"/>
+    	</xs:sequence>
+        <xs:attribute name="userid" type="xs:string"/>
+        <xs:attribute name="from" type="xs:string"/>
+        <xs:attribute name="size" type="xs:string"/>
+        <xs:attribute name="totalcount" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="infolist">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+    			<xs:element ref="encash"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="encash">
+    	<xs:complexType>
+    		<xs:attribute name="encashid" type="xs:string"/>	
+    		<xs:attribute name="userid" type="xs:string"/>	
+    		<xs:attribute name="money" type="xs:string"/>	
+    		<xs:attribute name="createtime" type="xs:string"/>	
+    		<xs:attribute name="status" type="xs:string"/>	
+    		<xs:attribute name="username" type="xs:string"/>	
+    		<xs:attribute name="bankname" type="xs:string"/>	
+    		<xs:attribute name="bankcardno" type="xs:string"/>	
+    		<xs:attribute name="processtime" type="xs:string"/>	
+    		<xs:attribute name="processnote" type="xs:string"/>	
+    		<xs:attribute name="partnerencashid" type="xs:string"/>	
+    		<xs:attribute name="eiid" type="xs:string"/>	
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>

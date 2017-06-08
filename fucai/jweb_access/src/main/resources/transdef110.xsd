@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="floworder"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="floworder" type="querytype"/>
+    <xs:complexType name="querytype">
+    	<xs:sequence>
+    		<xs:element ref="flowissues"/>
+    	</xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="totalmoney" type="xs:string"/>
+        <xs:attribute name="province" type="xs:string"/>
+        <xs:attribute name="totalissue" type="xs:string"/>
+        <xs:attribute name="playtype" type="xs:string"/>
+        <xs:attribute name="gameid" type="xs:string"/>
+        <xs:attribute name="stopflag" type="xs:string"/>
+        <xs:attribute name="userid" type="xs:string"/>
+        <xs:attribute name="ball" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="flowissues">
+    	<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="unbounded">
+				<xs:element ref="flowissue"/>
+			</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="flowissue">
+    	<xs:complexType>
+    		<xs:attribute name="issue" type="xs:string"/>
+    		<xs:attribute name="multiple" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+    
+</xs:schema>

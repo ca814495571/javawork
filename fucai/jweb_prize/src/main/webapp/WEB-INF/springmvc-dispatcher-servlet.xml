@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		 http://www.springframework.org/schema/tx
+		 http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <context:property-placeholder location="classpath:database_${cfg.env}.properties"/>
+
+
+    <!-- 视图解释类 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <!-- 自动扫描注解方式的bean -->
+    <context:component-scan base-package="com.cqfc"/>
+    <context:annotation-config />
+    
+    
+    <task:annotation-driven executor="myExecutor" scheduler="myScheduler" />
+    <task:executor id="myExecutor" pool-size="2" />
+    <task:scheduler id="myScheduler" pool-size="10" />
+
+
+    <!--
+    <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://${url}/${database}?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="${db_user}"/>
+        <property name="password" value="${db_passwd}"/>
+        <property name="poolPingEnabled" value="true"/>
+        <property name="poolPingQuery" value="select now()"/>
+        <property name="poolPingConnectionsNotUsedFor" value="25200000"/>
+    </bean>
+    -->
+    
+    <bean class="org.apache.ibatis.datasource.pooled.PooledDataSource"
+		id="parentDataSource">
+		<property name="driver">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="username">
+			<value>${db_user}</value>
+		</property>
+		<property name="password">
+			<value>${db_passwd}</value>
+		</property>
+	    <property name="poolPingEnabled" value="true"/>
+        <property name="poolPingQuery" value="select now()"/>
+        <property name="poolPingConnectionsNotUsedFor" value="600000"/>
+	</bean>
+    
+    <bean parent="parentDataSource" id="master_fucai_prize_00">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_00}?zeroDateTimeBehavior=convertToNull&amp;zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	
+		<bean parent="parentDataSource" id="master_fucai_prize_01">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_01}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+
+	<bean parent="parentDataSource" id="master_fucai_prize_02">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_02}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_03">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_03}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_04">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_04}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_05">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_05}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_06">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_06}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_07">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_07}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_08">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_08}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="master_fucai_prize_09">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize_09}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	
+	<bean parent="parentDataSource" id="master_fucai_prize">
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_prize}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	
+		<bean parent="parentDataSource" id="slave_fucai_prize">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	
+    <bean parent="parentDataSource" id="slave_fucai_prize_00">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_00}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<!-- 不同的数据库test2 -->
+	<bean parent="parentDataSource" id="slave_fucai_prize_01">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_01}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+
+	<bean parent="parentDataSource" id="slave_fucai_prize_02">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_02}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_03">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_03}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_04">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_04}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_05">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_05}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_06">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_06}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_07">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_07}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_08">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_08}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	<bean parent="parentDataSource" id="slave_fucai_prize_09">
+		<property name="url"
+			value="jdbc:mysql://${slave_fucai_prize_09}?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;characterEncoding=utf-8">
+		</property>
+	</bean>
+	
+    
+    <bean class="com.cqfc.prize.util.DynamicDataSource" id="dynamicDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry value-ref="master_fucai_prize_00" key="master_fucai_prize_00"></entry>
+				<entry value-ref="master_fucai_prize_01" key="master_fucai_prize_01"></entry>
+				<entry value-ref="master_fucai_prize_02" key="master_fucai_prize_02"></entry>
+				<entry value-ref="master_fucai_prize_03" key="master_fucai_prize_03"></entry>
+				<entry value-ref="master_fucai_prize_04" key="master_fucai_prize_04"></entry>
+				<entry value-ref="master_fucai_prize_05" key="master_fucai_prize_05"></entry>
+				<entry value-ref="master_fucai_prize_06" key="master_fucai_prize_06"></entry>
+				<entry value-ref="master_fucai_prize_07" key="master_fucai_prize_07"></entry>
+				<entry value-ref="master_fucai_prize_08" key="master_fucai_prize_08"></entry>
+				<entry value-ref="master_fucai_prize_09" key="master_fucai_prize_09"></entry>
+				<entry value-ref="slave_fucai_prize_00" key="slave_fucai_prize_00"></entry>
+				<entry value-ref="slave_fucai_prize_01" key="slave_fucai_prize_01"></entry>
+				<entry value-ref="slave_fucai_prize_02" key="slave_fucai_prize_02"></entry>
+				<entry value-ref="slave_fucai_prize_03" key="slave_fucai_prize_03"></entry>
+				<entry value-ref="slave_fucai_prize_04" key="slave_fucai_prize_04"></entry>
+				<entry value-ref="slave_fucai_prize_05" key="slave_fucai_prize_05"></entry>
+				<entry value-ref="slave_fucai_prize_06" key="slave_fucai_prize_06"></entry>
+				<entry value-ref="slave_fucai_prize_07" key="slave_fucai_prize_07"></entry>
+				<entry value-ref="slave_fucai_prize_08" key="slave_fucai_prize_08"></entry>
+				<entry value-ref="slave_fucai_prize_09" key="slave_fucai_prize_09"></entry>
+  				
+				<entry value-ref="master_fucai_prize" key="master_fucai_prize"></entry>
+				<entry value-ref="slave_fucai_prize" key="slave_fucai_prize"></entry>
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="master_fucai_prize">
+		</property>
+	</bean>
+    
+    
+    
+
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+
+    <!-- 自动扫描mybatis mapper -->
+     
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="com.cqfc" />
+        <property name="markerInterface" value="com.cqfc.prize.dao.mapper.BaseMapper" />
+     </bean>
+
+    <!-- transaction manager-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="txManager" />
+    	
+    <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+    <!--<bean class ="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  -->
+    <bean class ="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->
+            </list>
+        </property>
+    </bean>
+
+</beans>

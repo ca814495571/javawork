@@ -1,0 +1,5 @@
+﻿springmvc 开发模板
+
+demo部分部署之后的访问url为:
+http://localhost:8080/${context}/sample/list
+http://localhost:8080/${context}/sample/list.json

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                              http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cqfc</groupId>
+    <artifactId>fucai</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>3.2.6.RELEASE</spring.version>
+        <jdk.version>1.6</jdk.version>
+    </properties>
+
+
+    <modules>
+        <module>japp_access_back</module>
+        <module>japp_business_controller</module>
+        <module>japp_common</module>
+        <module>japp_fucai</module>
+        <module>japp_lottery_issue</module>
+        <module>japp_partner</module>
+        <module>japp_partner_account</module>
+        <module>japp_partner_order</module>
+		<module>japp_ticket_issue</module>
+		<module>japp_ticket_winning</module>
+        <module>japp_user_account</module>
+        <module>japp_user_order</module>
+		<module>test_print_system</module>   
+		<module>japp_append_task</module>
+		<module>japp_cancel_order</module>
+        <module>jweb_access</module>
+        <module>jweb_fucai</module>
+        <module>module_xmlparser</module>
+	    <module>test102</module>
+		<module>jweb_ticket_issue</module>
+		<module>jweb_out_ticket</module>
+		<module>jweb_fucai_management</module>
+		<module>test_ticket_issue</module>
+		<module>japp_risk_control</module>
+		<module>japp_id_generate</module>
+		<module>japp_ip_attribution_query</module>
+    </modules>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.3.2</version>
+                    <configuration>
+                        <source>${jdk.version}</source>
+                        <target>${jdk.version}</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="unionorder"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="unionorder" type="querytype"/>
+    <xs:complexType name="querytype">
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="userid" type="xs:string"/>
+        <xs:attribute name="gameid" type="xs:string"/>
+        <xs:attribute name="issue" type="xs:string"/>
+        <xs:attribute name="totalmoney" type="xs:string"/>
+        <xs:attribute name="displaytype" type="xs:string"/>
+        <xs:attribute name="jointype" type="xs:string"/>
+        <xs:attribute name="reservednum" type="xs:string"/>
+        <xs:attribute name="commissionrate" type="xs:string"/>
+        <xs:attribute name="playtype" type="xs:string"/>
+        <xs:attribute name="multiple" type="xs:string"/>
+        <xs:attribute name="sharenum" type="xs:string"/>
+        <xs:attribute name="persharemoney" type="xs:string"/>
+        <xs:attribute name="creatorjoinnum" type="xs:string"/>
+        <xs:attribute name="ball" type="xs:string"/>
+        <xs:attribute name="joinrate" type="xs:string"/>
+        <xs:attribute name="joinnum" type="xs:string"/>
+        <xs:attribute name="statuscode" type="xs:string"/>
+        <xs:attribute name="realreserved" type="xs:string"/>
+    </xs:complexType>
+
+</xs:schema>

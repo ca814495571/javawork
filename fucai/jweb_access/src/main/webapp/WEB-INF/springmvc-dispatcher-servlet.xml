@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		 http://www.springframework.org/schema/tx
+		 http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <!-- 支持注解方式mvc -->
+    <mvc:annotation-driven />
+    
+    <context:property-placeholder />
+
+   <bean id="initZooKeeperBean" class="com.cqfc.common.zookeeper.InitZooKeeperBean">
+   </bean>
+   
+	
+    <!-- 视图解释类 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 自动扫描注解方式的bean -->
+    <context:component-scan base-package="com.cqfc"/>
+    <context:annotation-config />
+    <task:annotation-driven executor="myExecutor" scheduler="myScheduler" />
+    <task:executor id="myExecutor" pool-size="2" />
+    <task:scheduler id="myScheduler" pool-size="10" />
+
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="txManager" />
+
+    <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+    <!--<bean class ="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  -->
+    <bean class ="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" >
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->
+            </list>
+        </property>
+    </bean>
+    
+    
+    <!-- 1.配置connectionFactory -->
+    <bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL">
+                    <value>${mq_address}</value>
+                </property>
+            </bean>
+        </property>
+        <property name="maxConnections" value="100"></property>
+    </bean>
+    
+    <!-- 2.定义消息目标 -->
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg index="0" value="topic_temp"></constructor-arg>
+    </bean>
+    
+    <!-- 3.配置Spring JMS Template -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 3.1 注入jmsFactory -->
+        <property name="connectionFactory" ref="jmsFactory"></property>
+        <!-- 3.2 配置消息目标 -->
+        <property name="defaultDestination" ref="destination" />
+    </bean>
+    
+    <bean id="activemqConsumer" class="com.cqfc.access.jms.ActivemqConsumer"></bean>
+
+    <bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsFactory" />
+        <property name="destination" ref="destination" />
+        <property name="messageListener" ref="activemqConsumer" />
+    </bean>
+
+</beans>

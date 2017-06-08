@@ -14,5 +14,5 @@
     <dubbo:annotation package="com.tom.appone"></dubbo:annotation>
     <!-- 生成远程服务代理，可以和本地bean一样使用demoService -->
     <dubbo:reference  id="servertwoService" version="1.0.0" interface="com.tom.common.servertwo.api.ServertwoService" url="dubbo://localhost:20880"/>
-    <dubbo:reference  id="server3Service" interface="com.tom.common.servertwo.api.ServertwoService" url="dubbo://localhost:20890"/>
+    <dubbo:reference  id="server3Service" version="2.0.0"  interface="com.tom.common.servertwo.api.ServertwoService" url="dubbo://localhost:20890"/>
 </beans>

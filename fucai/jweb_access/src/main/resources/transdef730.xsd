@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="orders"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="orders" type="querytype"/>
+    <xs:complexType name="querytype">
+    	<xs:sequence>
+    		<xs:element ref="userorders"/>
+    		<xs:element ref="unionorders"/>
+    		<xs:element ref="bookorders"/>
+    		<xs:element ref="joinorders"/>
+    	</xs:sequence>
+        <xs:attribute name="userid" type="xs:string"/>
+        <xs:attribute name="ordertype" type="xs:string"/>
+        <xs:attribute name="from" type="xs:string"/>
+        <xs:attribute name="size" type="xs:string"/>
+        <xs:attribute name="total" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="userorders">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+    			<xs:element ref="userorder"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="userorder" type="userordertype"/>
+    <xs:complexType name="userordertype">
+        <xs:attribute name="pid" type="xs:string"/>
+        <xs:attribute name="uorderid" type="xs:string"/>
+        <xs:attribute name="gameid" type="xs:string"/>
+        <xs:attribute name="issueno" type="xs:string"/>
+        <xs:attribute name="userid" type="xs:string"/>
+        <xs:attribute name="createtime" type="xs:string"/>
+        <xs:attribute name="playtype" type="xs:string"/>
+        <xs:attribute name="status" type="xs:string"/>
+        <xs:attribute name="money" type="xs:string"/>
+        <xs:attribute name="tradetime" type="xs:string"/>
+        <xs:attribute name="initprovinceid" type="xs:string"/>
+        <xs:attribute name="realprovinceid" type="xs:string"/>
+        <xs:attribute name="ticketid" type="xs:string"/>
+        <xs:attribute name="balls" type="xs:string"/>
+        <xs:attribute name="multiple" type="xs:string"/>
+        <xs:attribute name="stake" type="xs:string"/>
+        <xs:attribute name="prizemoney" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="prizestatus" type="xs:string"/>
+        <xs:attribute name="prizetype" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="unionorders">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+    			<xs:element ref="unionorder"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    <xs:element name="unionorder" type="unionordertype"/>
+    <xs:complexType name="unionordertype">
+        <xs:attribute name="unionid" type="xs:string"/>
+        <xs:attribute name="anteid" type="xs:string"/>
+        <xs:attribute name="stake" type="xs:string"/>
+        <xs:attribute name="totalshare" type="xs:string"/>
+        <xs:attribute name="sharemoney" type="xs:string"/>
+        <xs:attribute name="totalmoney" type="xs:string"/>
+        <xs:attribute name="displaytype" type="xs:string"/>
+        <xs:attribute name="jointype" type="xs:string"/>
+        <xs:attribute name="reservednum" type="xs:string"/>
+        <xs:attribute name="commissionrate" type="xs:string"/>
+        <xs:attribute name="playtype" type="xs:string"/>
+        <xs:attribute name="multiple" type="xs:string"/>
+        <xs:attribute name="sharenum" type="xs:string"/>
+        <xs:attribute name="persharemoney" type="xs:string"/>
+        <xs:attribute name="creatorjoinnum" type="xs:string"/>
+        <xs:attribute name="ball" type="xs:string"/>
+        <xs:attribute name="joinrate" type="xs:string"/>
+        <xs:attribute name="joinnum" type="xs:string"/>
+        <xs:attribute name="statuscode" type="xs:string"/>
+        <xs:attribute name="realreserved" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="bookorders">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+    			<xs:element ref="bookorder"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>    
+    <xs:element name="bookorder">
+    	<xs:complexType>
+    		<xs:attribute name="borderid" type="xs:string"/>
+    		<xs:attribute name="userid" type="xs:string"/>
+    		<xs:attribute name="anteid" type="xs:string"/>
+    		<xs:attribute name="money" type="xs:string"/>
+    		<xs:attribute name="status" type="xs:string"/>
+    		<xs:attribute name="playtype" type="xs:string"/>
+    		<xs:attribute name="stoptype" type="xs:string"/>
+    		<xs:attribute name="cancelmoney" type="xs:string"/>
+    		<xs:attribute name="prizemoney" type="xs:string"/>
+    		<xs:attribute name="stake" type="xs:string"/>
+    		<xs:attribute name="createtime" type="xs:string"/>
+    		<xs:attribute name="partnerid" type="xs:string"/>
+    		<xs:attribute name="startissue" type="xs:string"/>
+    		<xs:attribute name="currentissue" type="xs:string"/>
+    		<xs:attribute name="issuenum" type="xs:string"/>
+    		<xs:attribute name="gameid" type="xs:string"/>
+    		<xs:attribute name="cancelnum" type="xs:string"/>
+    		<xs:attribute name="finishednum" type="xs:string"/>
+    		<xs:attribute name="finishedsum" type="xs:string"/>
+    		<xs:attribute name="pid" type="xs:string"/>
+    		<xs:attribute name="anteBall" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+    
+      <xs:element name="joinorders">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+    			<xs:element ref="unionjoinorder" />
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="unionjoinorder">
+    	<xs:complexType>
+    		<xs:attribute name="joinid" type="xs:string"/>
+    		<xs:attribute name="userid" type="xs:string"/>
+    		<xs:attribute name="joinsharenum" type="xs:string"/>
+    		<xs:attribute name="joinmoney" type="xs:string"/>
+    		<xs:attribute name="createtime" type="xs:string"/>
+    		<xs:attribute name="unionorderid" type="xs:string"/>
+    		<xs:attribute name="prizemoney" type="xs:string"/>
+    		<xs:attribute name="status" type="xs:string"/>
+    		<xs:attribute name="partnerid" type="xs:string"/>
+    		<xs:attribute name="gameid" type="xs:string"/>
+    		<xs:attribute name="issueno" type="xs:string"/>
+    		<xs:attribute name="prizestatus" type="xs:string"/>
+    		<xs:attribute name="pid" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>

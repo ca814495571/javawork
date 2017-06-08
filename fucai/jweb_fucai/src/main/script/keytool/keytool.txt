@@ -1,0 +1,2 @@
+keytool -genkey -dname "cn=腾讯,ou=腾讯,o=腾讯,l=深圳,s=广东,c=中国" -keyalg RSA -keysize 1024 -sigalg MD5withRSA -alias tencent -keypass TencentAdmin4Fucai -keystore tencentcerts -storepass TencentAdmin4Fucai -validity 10000
+keytool -export -rfc -alias tencent -file tencent.cer -keystore tencentcerts -storepass TencentAdmin4Fucai

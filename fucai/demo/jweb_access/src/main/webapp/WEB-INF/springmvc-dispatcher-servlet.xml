@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		 http://www.springframework.org/schema/tx
+		 http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <context:property-placeholder location="classpath:database.properties"/>
+
+
+    <!-- 视图解释类 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <!-- 自动扫描注解方式的bean -->
+    <context:component-scan base-package="com.cqfc"/>
+    <context:annotation-config />
+    <task:annotation-driven executor="myExecutor" scheduler="myScheduler" />
+    <task:executor id="myExecutor" pool-size="2" />
+    <task:scheduler id="myScheduler" pool-size="10" />
+
+
+    <!--
+    <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://${url}/${database}?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="${db_user}"/>
+        <property name="password" value="${db_passwd}"/>
+        <property name="poolPingEnabled" value="true"/>
+        <property name="poolPingQuery" value="select now()"/>
+        <property name="poolPingConnectionsNotUsedFor" value="25200000"/>
+    </bean>
+    -->
+    <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://203.195.182.109:3306/fucai?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="fucai"/>
+        <property name="password" value="chongqing"/>
+        <property name="poolPingEnabled" value="true"/>
+        <property name="poolPingQuery" value="select now()"/>
+        <property name="poolPingConnectionsNotUsedFor" value="25200000"/>
+    </bean>
+
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 自动扫描mybatis mapper -->
+    <!--  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="com.cqfc" />
+        <property name="markerInterface" value="com.cqfc.access.dao.BaseMapper" />
+    </bean>
+	-->
+    <!-- transaction manager-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="txManager" />
+
+
+</beans>

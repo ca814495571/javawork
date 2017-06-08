@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+<!-- 
+   <bean id="initZooKeeperBean" class="com.cqfc.common.zookeeper.InitZooKeeperBean">
+        <property name="hasDb" value="true"></property>
+   </bean>
+ -->   
+	<context:property-placeholder location="classpath:database_${cfg.env}.properties" />
+
+	<bean id="applicationContextProvider" class="com.jami.common.ApplicationContextProvider"/>
+	
+	<!-- 支持注解方式mvc  默认的注解映射的支持 ,它会自动注册DefaultAnnotationHandlerMapping 与AnnotationMethodHandlerAdapter -->
+	<mvc:annotation-driven />
+	<!-- 视图解释类 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/pages/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	
+	<!-- 自动扫描注解方式的bean -->
+	<context:component-scan base-package="com.cqfc" />
+	<context:annotation-config />
+	<task:annotation-driven executor="myExecutor"
+		scheduler="myScheduler" />
+	<task:executor id="myExecutor" pool-size="2" />
+	<task:scheduler id="myScheduler" pool-size="10" />
+
+<!-- 拦截器 -->  
+   <mvc:interceptors>  
+       
+        <mvc:interceptor>  
+           <mvc:mapping path="/**" /> 
+           <mvc:exclude-mapping path="/**/fuser/login"/>
+            <mvc:exclude-mapping path="/**/image/generate"/>
+            <mvc:exclude-mapping path="/**/fuser/getMenusByRole"/>
+             <mvc:exclude-mapping path="/**/fuser/quit"/>
+           <bean class="com.cqfc.management.interceptor.CommInterceptor"></bean> 
+        </mvc:interceptor>  
+    </mvc:interceptors>   
+    <!--   
+             如果不定义mappingURL，则默认拦截所有对Controller的请求 ;   
+             可以使用正则表达式对url进行匹配，从而更细粒度的进行拦截(.*/entryOrJsonController\.do\?action=reg.*);  
+    -->  
+
+	<!-- <bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource"> 
+		<property name="driver" value="com.mysql.jdbc.Driver"/> <property name="url" 
+		value="jdbc:mysql://${url}/${database}?useUnicode=true&amp;characterEncoding=utf-8"/> 
+		<property name="username" value="${db_user}"/> <property name="password" value="${db_passwd}"/> 
+		<property name="poolPingEnabled" value="true"/> <property name="poolPingQuery" 
+		value="select now()"/> <property name="poolPingConnectionsNotUsedFor" value="25200000"/> 
+		</bean> -->
+	<bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+		<property name="driver" value="com.mysql.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://${master_fucai_back_user}?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull" />
+		<property name="username" value="${db_user}" />
+		<property name="password" value="${db_passwd}" />
+		<property name="poolPingEnabled" value="true" />
+		<property name="poolPingQuery" value="select now()" />
+		<property name="poolPingConnectionsNotUsedFor" value="25200000" />
+	</bean>
+
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 自动扫描mybatis mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="com.cqfc" />
+		<property name="markerInterface" value="com.cqfc.common.dao.BaseMapper" />
+	</bean>
+
+	<!-- transaction manager -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- enable transaction annotation support -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+	<!--<bean class ="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" 
+		> -->
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->
+			</list>
+		</property>
+	</bean>
+
+	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+		<property name="config">
+			<bean class="com.google.code.kaptcha.util.Config">
+				<constructor-arg>
+					<!-- <props> <prop key="kaptcha.border">yes</prop> <prop key="kaptcha.border.color">105,179,90</prop> 
+						<prop key="kaptcha.textproducer.font.color">blue</prop> <prop key="kaptcha.image.width">125</prop> 
+						<prop key="kaptcha.image.height">45</prop> <prop key="kaptcha.textproducer.font.size">45</prop> 
+						<prop key="kaptcha.session.key">code</prop> <prop key="kaptcha.textproducer.char.length">4</prop> 
+						<prop key="kaptcha.textproducer.font.names">宋体,楷体,微软雅黑</prop> </props> -->
+
+					<props>
+						<!-- 验证码宽度 -->
+						<prop key="kaptcha.image.width">85</prop>
+						<!-- 验证码高度 -->
+						<prop key="kaptcha.image.height">40</prop>
+						<!-- 生成验证码内容范围 -->
+						<prop key="kaptcha.textproducer.char.string">0123456789</prop>
+						<!-- 验证码个数 -->
+						<prop key="kaptcha.textproducer.char.length">4</prop>
+						<!-- 是否有边框 -->
+						<prop key="kaptcha.border">no</prop>
+						<!-- 边框颜色 -->
+						<prop key="kaptcha.border.color">105,179,90</prop>
+						<!-- 边框厚度 -->
+						<prop key="kaptcha.border.thickness">1</prop>
+						<!-- 验证码字体颜色 -->
+						<prop key="kaptcha.textproducer.font.color">black</prop>
+						<!-- 验证码字体大小 -->
+						<prop key="kaptcha.textproducer.font.size">35</prop>
+						<!-- 验证码所属字体样式 -->
+						<prop key="kaptcha.textproducer.font.names">Arial, Courier</prop>
+						<!-- 验证码文本字符间距 -->
+						<prop key="kaptcha.textproducer.char.space">3</prop>
+					</props>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 1.配置connectionFactory -->
+    <bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL">
+                    <value>${mq_address}</value>
+                </property>
+            </bean>
+        </property>
+        <property name="maxConnections" value="100"></property>
+    </bean>
+    
+    <!-- 2.定义消息目标 -->
+    <bean id="destination" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg index="0" value="topic_temp"></constructor-arg>
+    </bean>
+    
+    <!-- 3.配置Spring JMS Template -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 3.1 注入jmsFactory -->
+        <property name="connectionFactory" ref="jmsFactory"></property>
+        <!-- 3.2 配置消息目标 -->
+        <property name="defaultDestination" ref="destination" />
+    </bean>
+    
+    <bean id="activemqProducer" class="com.jami.common.ActivemqProducer"/>
+</beans>

@@ -18,6 +18,7 @@
 
     <!-- 声明需要暴露的服务接口 -->
     <dubbo:service registry="N/A"  protocol="dubbo"  version="1.0.0" interface="com.tom.common.servertwo.api.ServertwoService" ref="servertwoServiceImpl"/>
+    <dubbo:service registry="N/A"  protocol="dubbo"  version="2.0.0" interface="com.tom.common.servertwo.api.ServertwoService" ref="servertwoServiceImpl"/>
     <!-- 和本地bean一样实现服务 -->
     <bean id="servertwoServiceImpl"  class="com.tom.appone.service.impl.ServertwoServiceImpl"/>
 

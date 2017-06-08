@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder location="classpath:database.properties"/>
+
+    <context:component-scan base-package="com.cqfc.statistics" />
+
+	<import resource="data_sync_config.xml"/>
+
+    <bean id="rdbDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://${jdbc.url}/${jdbc.rdb.database}?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="idleConnectionTestPeriodInSeconds" value="10"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>
+        <property name="maxConnectionsPerPartition" value="5"/>
+        <property name="minConnectionsPerPartition" value="2"/>
+        <property name="statementsCacheSize" value="1000"/>
+    </bean>
+
+    <bean id="rdbJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="rdbDataSource"></property>
+    </bean>
+
+    <bean id="cqfcDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://${jdbc.url}/${jdbc.cqfc.database}?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="idleConnectionTestPeriodInSeconds" value="10"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>
+        <property name="maxConnectionsPerPartition" value="5"/>
+        <property name="minConnectionsPerPartition" value="2"/>
+        <property name="statementsCacheSize" value="1000"/>
+    </bean>
+
+    <bean id="cqfcJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="cqfcDataSource"></property>
+    </bean>
+
+    <bean id="cqfcfinanceDataSource" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://${jdbc.url}/${jdbc.cqfcfinance.database}?useUnicode=true&amp;characterEncoding=utf-8"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="idleConnectionTestPeriodInSeconds" value="10"/>
+        <property name="idleMaxAgeInMinutes" value="240"/>
+        <property name="maxConnectionsPerPartition" value="8"/>
+        <property name="minConnectionsPerPartition" value="2"/>
+        <property name="statementsCacheSize" value="1000"/>
+    </bean>
+
+    <bean id="cqfcfinanceJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="cqfcfinanceDataSource"></property>
+    </bean>
+
+    <context:annotation-config />
+
+    <bean id="applicationContextProvider" class="com.cqfc.statistics.common.ApplicationContextProvider"/>
+
+</beans>

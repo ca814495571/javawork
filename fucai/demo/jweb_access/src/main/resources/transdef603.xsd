@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="statinfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="statinfo" type="querytype"/>
+    <xs:complexType name="querytype">
+    	<xs:sequence>
+    		<xs:element ref="stats"/>
+    	</xs:sequence>
+        <xs:attribute name="gameid" type="xs:string"/>
+        <xs:attribute name="issue" type="xs:string"/>
+        <xs:attribute name="totalsale" type="xs:string"/>
+        <xs:attribute name="totalbouns" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="stats">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+    			<xs:element ref="stat"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="stat">
+    	<xs:complexType>
+    		<xs:attribute name="type" type="xs:string"/>
+    		<xs:attribute name="sucnum" type="xs:string"/>
+    		<xs:attribute name="sucmoney" type="xs:string"/>
+    		<xs:attribute name="failnum" type="xs:string"/>
+    		<xs:attribute name="failmoney" type="xs:string"/>
+    		<xs:attribute name="smallprizenum" type="xs:string"/>
+    		<xs:attribute name="smallprize" type="xs:string"/>
+    		<xs:attribute name="bigprizenum" type="xs:string"/>
+    		<xs:attribute name="bigprize" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>

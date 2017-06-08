@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="partnersalestat"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="partnersalestat" type="querytype"/>
+    <xs:complexType name="querytype">
+        <xs:attribute name="partnerId" type="xs:string"/>
+        <xs:attribute name="gameId" type="xs:string"/>
+        <xs:attribute name="issueNo" type="xs:string"/>
+        <xs:attribute name="statType" type="xs:string"/>
+        <xs:attribute name="totalSale" type="xs:string"/>
+        <xs:attribute name="totalBonus" type="xs:string"/>
+        <xs:attribute name="totalSucStakes" type="xs:string"/>
+        <xs:attribute name="totalFailStakes" type="xs:string"/>
+        <xs:attribute name="bigPrizeStakes" type="xs:string"/>
+        <xs:attribute name="createTime" type="xs:string"/>
+        <xs:attribute name="totalBigBonus" type="xs:string"/>
+        <xs:attribute name="smallPrizeStakes" type="xs:string"/>
+        <xs:attribute name="totalSmallBonus" type="xs:string"/>
+        <xs:attribute name="totalSucSale" type="xs:string"/>
+        <xs:attribute name="totalFailSale" type="xs:string"/>
+    </xs:complexType>
+
+</xs:schema>

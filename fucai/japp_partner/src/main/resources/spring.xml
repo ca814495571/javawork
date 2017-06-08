@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <context:property-placeholder location="classpath:database_${cfg.env}.properties" />
+
+    <bean id="masterDataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+		<property name="driver">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="username">
+			<value>${db_user}</value>
+		</property>
+		<property name="password">
+			<value>${db_passwd}</value>
+		</property>
+		<property name="poolPingEnabled" value="true" />
+		<property name="poolPingQuery" value="select now()" />
+		<property name="poolPingConnectionsNotUsedFor" value="600000" />
+	</bean>
+    <bean id="slaveDataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+		<property name="driver">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="username">
+			<value>${db_user}</value>
+		</property>
+		<property name="password">
+			<value>${db_passwd}</value>
+		</property>
+		<property name="poolPingEnabled" value="true" />
+		<property name="poolPingQuery" value="select now()" />
+		<property name="poolPingConnectionsNotUsedFor" value="600000" />
+	</bean>
+	
+	<!-- master dataSource -->
+	<bean id="master_fucai" parent="masterDataSource">
+		<property name="url" value= "jdbc:mysql://${master_fucai}?useUnicode=true&amp;characterEncoding=utf-8" />
+	</bean>
+	<!-- slave dataSource -->
+	<bean id="slave_fucai" parent="slaveDataSource">
+		<property name="url" value= "jdbc:mysql://${slave_fucai}?useUnicode=true&amp;characterEncoding=utf-8" />
+	</bean>
+	
+	<bean id="dynamicDataSource" class="com.jami.common.DynamicDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="master_fucai" value-ref="master_fucai" />
+				<entry key="slave_fucai" value-ref="slave_fucai" />
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="master_fucai" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dynamicDataSource" />
+	</bean>
+    
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+    <bean id="transactionTemplate"  
+        class="org.springframework.transaction.support.TransactionTemplate">  
+        <property name="transactionManager">  
+            <ref local="txManager" />  
+        </property>    
+        <property name="isolationLevelName" value="ISOLATION_DEFAULT"/>  
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>  
+    </bean>  
+    <!-- enable transaction annotation support -->
+    <tx:annotation-driven transaction-manager="txManager" />
+
+    <!-- 自动扫描注解方式的bean -->
+    <context:component-scan base-package="com.cqfc"/>
+    <context:component-scan base-package="com.jami"/>
+
+    <!-- 自动扫描mybatis mapper -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="com.cqfc" />
+        <property name="markerInterface" value="com.jami.common.BaseMapper" />
+    </bean>
+
+    <bean id="serviceActionMethodInterceptor" class="com.jami.interceptor.ServiceActionMethodInterceptor" />
+    
+    <bean id="builder" class="net.rubyeye.xmemcached.XMemcachedClientBuilder">
+        <constructor-arg>
+            <list>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_01}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_01}</value>
+                    </constructor-arg>
+                </bean>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_02}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_02}</value>
+                    </constructor-arg>
+                </bean>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_03}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_03}</value>
+                    </constructor-arg>
+                </bean>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_04}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_04}</value>
+                    </constructor-arg>
+                </bean>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_05}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_05}</value>
+                    </constructor-arg>
+                </bean>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_06}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_06}</value>
+                    </constructor-arg>
+                </bean>
+                <bean class="java.net.InetSocketAddress">
+                    <constructor-arg>
+                        <value>${memcached_ip_07}</value>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <value>${memcached_port_07}</value>
+                    </constructor-arg>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="memcachedClient" class="net.rubyeye.xmemcached.MemcachedClient" factory-bean="builder" factory-method="build" destroy-method="shutdown" />
+
+</beans>

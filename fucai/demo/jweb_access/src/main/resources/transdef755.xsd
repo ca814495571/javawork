@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="ticketorder"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ticketorder" type="querytype"/>
+    <xs:complexType name="querytype">
+    	<xs:sequence>
+    		<xs:element ref="tickets"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="tickets">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+    			<xs:element ref="ticketbatchres"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="ticketbatchres">
+    	<xs:complexType>
+    		<xs:attribute name="id" type="xs:string"/>
+    		<xs:attribute name="palmid" type="xs:string"/>
+    		<xs:attribute name="msg" type="xs:string"/>
+    		<xs:attribute name="statuscode" type="xs:string"/>
+    		<xs:attribute name="issue" type="xs:string"/>
+    		<xs:attribute name="gameid" type="xs:string"/>
+    		<xs:attribute name="money" type="xs:string"/>
+    		<xs:attribute name="playtype" type="xs:string"/>
+    		<xs:attribute name="multiple" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>

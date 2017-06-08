@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="querybook"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="querybook" type="querytype"/>
+    <xs:complexType name="querytype">
+    	<xs:sequence>
+    		<xs:element ref="bookorder"/>
+    	</xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="bookorder">
+    	<xs:complexType>
+    		<xs:sequence>
+	    		<xs:element ref="perissueorder"/>
+	    	</xs:sequence>
+    		<xs:attribute name="borderid" type="xs:string"/>
+    		<xs:attribute name="userid" type="xs:string"/>
+    		<xs:attribute name="anteid" type="xs:string"/>
+    		<xs:attribute name="money" type="xs:string"/>
+    		<xs:attribute name="status" type="xs:string"/>
+    		<xs:attribute name="playtype" type="xs:string"/>
+    		<xs:attribute name="stoptype" type="xs:string"/>
+    		<xs:attribute name="cancelmoney" type="xs:string"/>
+    		<xs:attribute name="prizemoney" type="xs:string"/>
+    		<xs:attribute name="stake" type="xs:string"/>
+    		<xs:attribute name="createtime" type="xs:string"/>
+    		<xs:attribute name="partnerid" type="xs:string"/>
+    		<xs:attribute name="startissue" type="xs:string"/>
+    		<xs:attribute name="currentissue" type="xs:string"/>
+    		<xs:attribute name="issuenum" type="xs:string"/>
+    		<xs:attribute name="gameid" type="xs:string"/>
+    		<xs:attribute name="cancelnum" type="xs:string"/>
+    		<xs:attribute name="finishednum" type="xs:string"/>
+    		<xs:attribute name="finishedsum" type="xs:string"/>
+    		<xs:attribute name="pid" type="xs:string"/>
+    		<xs:attribute name="anteball" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+    
+     <xs:element name="perissueorder" type="perissueordertype"/>
+    <xs:complexType name="perissueordertype">
+    	<xs:sequence minOccurs="1" maxOccurs="unbounded">
+    		<xs:element ref="bookperissueorder"/>
+    	</xs:sequence>
+    </xs:complexType>
+    
+    <xs:element name="bookperissueorder">
+    	<xs:complexType>
+    		<xs:attribute name="perissueid" type="xs:string"/>
+    		<xs:attribute name="multiple" type="xs:string"/>
+    		<xs:attribute name="chileNum" type="xs:string"/>
+    		<xs:attribute name="prizeType" type="xs:string"/>
+    		<xs:attribute name="prizestatus" type="xs:string"/>
+    		<xs:attribute name="borderId" type="xs:string"/>
+    		<xs:attribute name="gameId" type="xs:string"/>
+    		<xs:attribute name="issueNo" type="xs:string"/>
+    		<xs:attribute name="status" type="xs:string"/>
+    		<xs:attribute name="money" type="xs:string"/>
+    		<xs:attribute name="prizeMoney" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="ticketorder"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="ticketorder" type="ticketordertype">
+    </xs:element>
+    
+    <xs:complexType name="ticketordertype">
+    	<xs:sequence>
+    		<xs:element ref="user"/>
+    		<xs:element ref="tickets"/>
+    	</xs:sequence>
+    	<xs:attribute name="gameid" type="xs:string"/>
+    	<xs:attribute name="ticketsnum" type="xs:string"/>
+    	<xs:attribute name="totalmoney" type="xs:string"/>
+    	<xs:attribute name="province" type="xs:string"/>
+    	<xs:attribute name="machine" type="xs:string"/>
+    	<xs:attribute name="batchid" type="xs:string"/>
+    	<xs:attribute name="wareid" type="xs:string"/>
+    </xs:complexType>
+    
+	<xs:element name="user">
+  	    <xs:complexType>
+	    	<xs:attribute name="userid" type="xs:string"/>
+	    	<xs:attribute name="realname" type="xs:string"/>
+	    	<xs:attribute name="idcard" type="xs:string"/>
+	    	<xs:attribute name="phone" type="xs:string"/>
+	    </xs:complexType>
+	</xs:element>
+	
+	<xs:element name="tickets">
+		<xs:complexType>
+			<xs:sequence minOccurs="1" maxOccurs="unbounded">
+			  <xs:element ref="ticket"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ticket">
+		<xs:complexType>
+		    <xs:sequence>
+		    	<xs:element name="ball" type="xs:string"/>
+		    </xs:sequence>
+			<xs:attribute name="id" type="xs:string"/>
+			<xs:attribute name="issue" type="xs:string"/>
+			<xs:attribute name="multiple" type="xs:string"/>
+			<xs:attribute name="playtype" type="xs:string"/>
+			<xs:attribute name="money" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

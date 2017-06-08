@@ -1,0 +1,8 @@
+Spring Scheduler 支持三种调度方式:
+cron : A cron-like expression, extending the usual UN*X definition to include triggers on the second as well as minute, hour, day of month, month and day of week.
+fixedDelay : Execute the annotated method with a fixed period between the end of the last invocation and the start of the next.
+fixedRate : Execute the annotated method with a fixed period between invocations
+
+[如何运行]
+  (1) 把应用部署到Tomcat
+  (2) 在tomcat的输出中, 会定期看到打印类似 "[fixedDelay] task2 got executed at 15:24:28" 的信息

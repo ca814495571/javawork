@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence >
+                <xs:element ref="partnerdatas"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="partnerdatas" type="querytype"/>
+    <xs:complexType name="querytype">
+        <xs:sequence>
+        	<xs:element ref="partnerdatasbeans"/>
+        </xs:sequence>
+        <xs:attribute name="partnerid" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="partnerdatasbeans">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+    			<xs:element ref="partnerdatasbean"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+    <xs:element name="partnerdatasbean">
+    	<xs:complexType>
+    		<xs:attribute name="partnerId" type="xs:string"/>
+    		<xs:attribute name="gameId" type="xs:string"/>
+    		<xs:attribute name="statTime" type="xs:string"/>
+    		<xs:attribute name="saleAccount" type="xs:string"/>
+    		<xs:attribute name="prizeAccount" type="xs:string"/>
+    		<xs:attribute name="encachMoney" type="xs:string"/>
+    		<xs:attribute name="chargeMoney" type="xs:string"/>
+    		<xs:attribute name="proxyAccount" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>

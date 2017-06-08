@@ -14,11 +14,11 @@ public class SpringBootApplication {
 
 //    static Log logger =  LogFactory.getLog(SpringBootApplication.class);
     public static void main(String[] args){
-        ApplicationContext ctx = new SpringApplicationBuilder()
-                .sources(SpringBootApplication.class)
-                .web(true) // 没错，把项目设置成web环境
-                .run(args);
-//        SpringApplication.run(SpringBootApplication.class, args);
+//        ApplicationContext ctx = new SpringApplicationBuilder()
+//                .sources(SpringBootApplication.class)
+//                .web(false) // 没错，把项目设置成web环境
+//                .run(args);
+        SpringApplication.run(SpringBootApplication.class, args);
     }
 }
 

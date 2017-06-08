@@ -1,0 +1,6 @@
+﻿(1) protocol下存放接口的定义，即定义了服务器端与客户端之间的调用协议， 所有代码由XXXX.thrift生成;
+(2) XXXX.thrift 需要放在相对应的protocol文件夹下 (技术上不需要，但为了方便维护)
+(3) 由XXXX.thrift生成的代码不要修改
+(4) 如何运行?
+    (a) 启动服务端的server监听: src/main/java/com/jami/JappBootstrapServer.java
+    (b) 运行客户端的调用: src/main/java/${pkg}/samplemodule/client/JavaClient.java

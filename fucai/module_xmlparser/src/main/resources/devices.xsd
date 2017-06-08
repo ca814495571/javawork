@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+	 id        		设备的id
+     type      		设备的类型
+     ip       		设备的ip
+     port      		设备的端口号
+     queueSize 		设备当前处理的队列大小
+     threshholdSize 设备最多处理的队列大小
+     desc      		设备描述说明
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="devices">
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element ref="device"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="device" type="device"></xs:element>
+    <xs:complexType name="device">
+    	<xs:sequence>
+    		<xs:element name="id" type="xs:int"/>
+    		<xs:element name="type" type="xs:int"/>
+    		<xs:element name="ip" type="xs:string"/>
+    		<xs:element name="port" type="xs:int"/>
+    		<xs:element name="queueSize" type="xs:int"/>
+    		<xs:element name="thresholdSize" type="xs:int"/>
+    		<xs:element name="desc" type="xs:string"/>
+    	</xs:sequence>
+    </xs:complexType>
+</xs:schema>

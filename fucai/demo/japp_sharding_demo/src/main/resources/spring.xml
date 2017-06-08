@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder location="classpath:database.properties"/>
+
+    <bean id="abstractDataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <property name="username" value="mdsadmin"/>
+        <property name="password" value="mdsadmin"/>
+        <property name="poolPingEnabled" value="true"/>
+        <property name="poolPingQuery" value="select now()"/>
+        <property name="poolPingConnectionsNotUsedFor" value="25200000"/>
+    </bean>
+
+    <bean id="db1" parent="abstractDataSource">
+        <property name="url" value="${sharding1.url}?useUnicode=true&amp;characterEncoding=utf-8"/>
+    </bean>
+
+    <bean id="db2" parent="abstractDataSource">
+        <property name="url" value="${sharding2.url}?useUnicode=true&amp;characterEncoding=utf-8"/>
+    </bean>
+
+    <bean id="dynamicDataSource" class="com.jami.common.dao.DynamicRoutingDataSource" >
+        <property name="targetDataSources">
+            <map key-type="com.jami.common.dao.DataSourceEntry">
+                <entry key="SHARDING1" value-ref="db1"/>
+                <entry key="SHARDING2" value-ref="db2"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="db1"></property>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+
+    <!-- 自动扫描注解方式的bean -->
+    <context:component-scan base-package="com.cqfc"/>
+    <context:component-scan base-package="com.jami"/>
+
+    <!-- 自动扫描mybatis mapper -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="com.cqfc" />
+        <property name="markerInterface" value="com.jami.common.dao.BaseMapper" />
+    </bean>
+</beans>

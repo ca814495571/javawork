@@ -1,0 +1,1 @@
+ALTER TABLE fucai.t_lottery_issue ADD COLUMN salesVolume bigint(20) NOT NULL DEFAULT '0' COMMENT '销量';

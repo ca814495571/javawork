@@ -13,7 +13,7 @@ public class TestController {
     @Reference(version = "1.0.0")
     private ServertwoService servertwoService;
 
-    @Reference
+    @Reference(version = "2.0.0")
     private ServertwoService server3Service;
 
     @RequestMapping("/a")

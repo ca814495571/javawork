@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="msg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="head"/>
+                <xs:element ref="body"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="head" type="headtype"/>
+    <xs:complexType name="headtype">
+        <xs:attribute name="transcode" type="xs:string"/>
+        <xs:attribute name="partnerid" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="time" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="body">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="matchs"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="matchs">
+    	<xs:complexType>
+    		<xs:sequence minOccurs="1" maxOccurs="unbounded">
+    			<xs:element ref="match"/>
+    		</xs:sequence>
+    	</xs:complexType>
+    </xs:element>
+    
+      <xs:element name="match">
+    	<xs:complexType>
+    		<xs:attribute name="matchid" type="xs:string"/>
+    		<xs:attribute name="gameno" type="xs:string"/>
+    		<xs:attribute name="gamename" type="xs:string"/>
+    		<xs:attribute name="homename" type="xs:string"/>
+    		<xs:attribute name="guestname" type="xs:string"/>
+    		<xs:attribute name="matchstatus" type="xs:string"/>
+    		<xs:attribute name="gametime" type="xs:string"/>
+    		<xs:attribute name="endtime" type="xs:string"/>
+    	</xs:complexType>
+    </xs:element>
+
+</xs:schema>
